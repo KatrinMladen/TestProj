@@ -5,6 +5,7 @@ import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.testng.annotations.Optional;
+import tests.BaseTest;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -29,66 +30,54 @@ public class Amazon {
     List<WebElement> allSneakers;
 
     public Map<String, String> getAllDistinctProducts() {
-//        Map<String, String> result = new HashMap<>();
-//        for (WebElement el : allSneakers) {
-//            //String name = el.findElement(By.cssSelector(".a-size-base-plus.a-color-base.a-text-normal")).getText();
-//            String name=null;
-//            try {
-//                name = el.findElement(By.xpath(".//a[contains(@class,'a-text-normal')]/span[2]")).getText();
-//            } catch (Exception ex){
-//                //System.out.println("Error: "+result);
-//            }
-//            try{
-//                //String price = el.findElement(By.cssSelector(".a-row.a-size-base.a-color-base span span")).getText();
-//                String price = el.findElement(By.xpath(".//span[@class='a-offscreen']")).getAttribute("outerText");
-//                result.put(name, price);
-//            }
-//            catch(Exception ex){
-//                result.put(name, "$0.00");
-//            }
-//        }
-//               return result;
 
-        Map<String, String> result = new LinkedHashMap<>();
+        Map<String, String> result = new HashMap<>();
         for (WebElement el : allSneakers) {
-            String name = "";
+            //String name = el.findElement(By.cssSelector(".a-size-base-plus.a-color-base.a-text-normal")).getText();
+            String name = null;
             try {
-                name = el.findElement(By.xpath(".//a[contains(@class,'a-text-normal')]/span[2]")).getText();
+                name = el.findElement(By.xpath(".//a[contains(@class,'a-text-normal')]")).getText();
             } catch (Exception ex) {
-                System.out.println("Name is not defined for this product: " + ex.getMessage());
+                //System.out.println("Error: "+result);
+                //BaseTest.LOG.debug("name is not find");
             }
-            String price = "";
+            String price = null;
             try {
-                price = el.findElement(By.xpath(".//span[@class='a-offscreen']"))
-                        .getAttribute("innerText")
-                        .replace("\n", "");
+                //String price = el.findElement(By.cssSelector(".a-row.a-size-base.a-color-base span span")).getText();
+                price = el.findElement(By.xpath(".//span[@class='a-offscreen']")).getAttribute("outerText");
+                result.put(name, price);
+                BaseTest.LOG.debug("Find price");
             } catch (Exception ex) {
-                System.out.println("Price is not defined for this product: " + ex.getMessage());
+                result.put(name, "$0.00");
             }
-            if (price.equals("")) {
-                System.out.println("Error: Price is not defined for the product - " + name);
-            }
-            result.put(name, price);
         }
-        return result;
+               return result;
     }
 
     public void searchProduct(String text) {
         searchBox.clear();
         searchBox.sendKeys(text);
         searchBox.sendKeys(Keys.ENTER);
+        BaseTest.LOG.info("Searching for Adidas shoes for men, click ENTER");
     }
 
     public void setMinPriceFilter(String text) {
         minPriceFilter.clear();
+        BaseTest.LOG.debug("Set filter for minimum price");
         minPriceFilter.sendKeys(text);
+        BaseTest.LOG.info("Applied filter for minimum price");
     }
 
     public void setSneakersType() {
+        BaseTest.LOG.debug("Try to set Sneakers Type");
         sneakersFilterButton.click();
+        BaseTest.LOG.info("Set Sneakers Type");
+
     }
 
     public void goSearch() {
+        BaseTest.LOG.debug("Try to click on button");
         goButton.click();
+        BaseTest.LOG.info("Submitting search query");
     }
 }

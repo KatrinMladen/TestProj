@@ -27,16 +27,9 @@ public class AdidasTest extends BaseTest {
         driver.get("https://amazon.com/");
         Amazon storePage = PageFactory.initElements(driver, Amazon.class);
 
-        LOG.debug("Searching for Adidas shoes for men");
         storePage.searchProduct("adidas shoes men");
-
-        LOG.debug("Applying filter for Sneakers");
         storePage.setSneakersType();
-
-        LOG.debug("Applying filter for minimum price");
         storePage.setMinPriceFilter("40");
-
-        LOG.debug("Submitting search query");
         storePage.goSearch();
 
         LOG.info("Getting all distinct products and their prices");
@@ -46,7 +39,7 @@ public class AdidasTest extends BaseTest {
         //Assert
         SoftAssert softAssert = new SoftAssert();
         mapOfDistinctSneakers.forEach((key, value) -> {
-            softAssert.assertNotNull(value, "No price for " + key);
+            softAssert.assertFalse(value.equals("$0.00"), "No price for " + key);
         });
         softAssert.assertAll();
 
